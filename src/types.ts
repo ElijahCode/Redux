@@ -1,6 +1,6 @@
 export type State = any;
 
-export type Action = { type: string };
+export type Action = { [key: string]: string | number };
 
 export type Reducer = (state: State | undefined, action: Action) => State;
 
@@ -13,3 +13,11 @@ export type Store = {
   subscribe(fun: () => void): () => void;
   replaceReducer(nextReducer: Reducer): void;
 };
+
+export type CombineReducerArgument = {
+  [key: string]: any;
+  a: Reducer;
+  b: Reducer;
+};
+
+export type CombineReducerResult = { [keys: string]: any };
