@@ -1,8 +1,8 @@
 import { Store, Reducer, State, Action } from "../types";
 
-export function createStore(reducer: Reducer, initialState?: State): Store {
+export function createStore(reducer: Reducer, preLoadedState?: State): Store {
   const store: Store = {
-    state: initialState,
+    state: preLoadedState,
     listeners: [],
     storeReducer(state: State, action: Action): State {
       return reducer(state, action);

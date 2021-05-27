@@ -20,4 +20,4 @@ export type CombineReducerArgument = {
   b: Reducer;
 };
 
-export type CombineReducerResult = { [keys: string]: any };
+export type CombineReducerResult = { [keys: string]: State };

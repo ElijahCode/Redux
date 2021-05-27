@@ -6,15 +6,15 @@ import {
 } from "../types";
 
 export function combineReducers(
-  someobject: CombineReducerArgument
+  reducers: CombineReducerArgument
 ): (state?: State | undefined, action?: Action) => CombineReducerResult {
   return (state?: State | undefined, action?: Action): CombineReducerResult => {
     const result: CombineReducerResult = {};
-    Object.keys(someobject).forEach((el) => {
+    Object.keys(reducers).forEach((el) => {
       if (state) {
-        result[el] = someobject[el](state[el], action);
+        result[el] = reducers[el](state[el], action);
       } else {
-        result[el] = someobject[el](state, action);
+        result[el] = reducers[el](state, action);
       }
     });
     return result;
