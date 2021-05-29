@@ -1,9 +1,14 @@
-import { Store, Reducer, State, Action } from "../types";
+import { Store, Reducer, State, Action, Middleware } from "../types";
 
-export function createStore(reducer: Reducer, preLoadedState?: State): Store {
+export function createStore(
+  reducer: Reducer,
+  preLoadedState?: State,
+  middlewareList?: Middleware[]
+): Store {
   const store: Store = {
     state: preLoadedState,
     listeners: [],
+    middlewareList: middlewareList || [],
     storeReducer(state: State, action: Action): State {
       return reducer(state, action);
     },
@@ -11,7 +16,11 @@ export function createStore(reducer: Reducer, preLoadedState?: State): Store {
       return this.state;
     },
     dispatch(action: Action): void {
-      this.state = this.storeReducer(this.state, action);
+      if (this.middlewareList.length > 0) {
+        this.middleware(action);
+      } else {
+        this.state = this.storeReducer(this.state, action);
+      }
       this.listeners.forEach((el) => el());
     },
     subscribe(param) {
@@ -20,6 +29,21 @@ export function createStore(reducer: Reducer, preLoadedState?: State): Store {
     },
     replaceReducer(nextReducer: Reducer): void {
       this.storeReducer = nextReducer;
+    },
+    middleware(action: Action): void {
+      if (this.middlewareList.length === 1) {
+        this.state = this.middlewareList[0](store)(() =>
+          this.storeReducer(this.state, action)
+        )(action);
+      } else {
+        let result;
+        this.middlewareList.forEach((el) => {
+          result = el(store)(() => this.storeReducer(this.state, action))(
+            action
+          );
+        });
+        this.state = result;
+      }
     },
   };
 
