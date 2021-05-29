@@ -22,8 +22,6 @@ export type Store = {
 
 export type CombineReducerArgument = {
   [key: string]: any;
-  a: Reducer;
-  b: Reducer;
 };
 
 export type CombineReducerResult = { [keys: string]: State };
