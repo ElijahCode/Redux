@@ -1,6 +1,6 @@
 name: PR Sanity Check
 
-on: ['push']
+on: ["push"]
 
 jobs:
   lint:
