@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/ElijahCode/Redux/badge.svg?branch=master)](https://coveralls.io/github/ElijahCode/Redux?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ElijahCode/Redux/badge.svg?branch=development)](https://coveralls.io/github/ElijahCode/Redux?branch=development)
 
 # ElijahCode Redux
 
