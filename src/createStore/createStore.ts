@@ -1,4 +1,5 @@
 import { Store, Reducer, State, Action, Middleware } from "../types";
+export { combineReducers } from '../combineReducers/combineReducers'
 
 export function createStore(
   reducer: Reducer,

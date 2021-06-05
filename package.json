@@ -1,8 +1,8 @@
 {
-  "name": "HomeWork14",
+  "name": "@elijahcode/Redux",
   "version": "1.0.0",
   "description": "",
-  "private": true,
+  "main": "dist/createStore/createStore.js",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles --forceExit",
     "lint": "prettier --check . && eslint . --ext .js,.ts && tsc --noEmit src/**/*.ts",
