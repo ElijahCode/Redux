@@ -8,8 +8,8 @@ import {
 export function combineReducers(
   reducers: CombineReducerArgument
 ): (state?: State | undefined, action?: Action) => State {
-  return (state?: State | undefined, action?: Action): CombineReducerResult => {
-    const result: CombineReducerResult = {};
+  return (state?: State | undefined, action?: Action): State => {
+    const result: State = {};
     Object.keys(reducers).forEach((el) => {
       if (state) {
         result[el] = reducers[el](state[el], action);
