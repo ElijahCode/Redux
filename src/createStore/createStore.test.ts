@@ -9,8 +9,8 @@ describe("functional interface", () => {
   });
 
   it("calculates new state with reducer call", () => {
-    const action1 = { type: "xxx" };
-    const action2 = { type: "yyyy" };
+    const action1 = { type: "Action1" };
+    const action2 = { type: "Action2" };
     const reducer = jest.fn((state = 1) => state + 1);
     const store = createStore(reducer);
     store.dispatch(action1);
@@ -22,8 +22,8 @@ describe("functional interface", () => {
   });
 
   it("notifies listeners about updates", () => {
-    const action1 = { type: "xxx" };
-    const action2 = { type: "yyyy" };
+    const action1 = { type: "Action1" };
+    const action2 = { type: "Action2" };
     const reducer = jest.fn((state = 1) => state + 1);
     const store = createStore(reducer);
     const spy = jest.fn();
@@ -36,8 +36,8 @@ describe("functional interface", () => {
   });
 
   it("allows to unsubscribe from the events", () => {
-    const action1 = { type: "xxx" };
-    const action2 = { type: "yyyy" };
+    const action1 = { type: "Action1" };
+    const action2 = { type: "Action2" };
     const reducer = jest.fn((state = 1) => state + 1);
     const store = createStore(reducer);
     const spy = jest.fn();
@@ -51,7 +51,7 @@ describe("functional interface", () => {
   });
 
   it("change a reducer", () => {
-    const action1 = { type: "zzz" };
+    const action1 = { type: "Action3" };
     const reducer = jest.fn((state = 3) => state + 1);
     const store = createStore(reducer);
     store.dispatch(action1);
@@ -100,16 +100,16 @@ describe("functional interface", () => {
     expect(log.stateAfterReducer).toBe("");
     expect(store.getState()).toBe(1);
 
-    store.dispatch({ type: "ccc" });
+    store.dispatch({ type: "Action4" });
 
-    expect(log.action).toBe("ccc");
+    expect(log.action).toBe("Action4");
     expect(log.stateAfterReducer).toBe(2);
     expect(store.getState()).toBe(2);
 
     store.replaceReducer((state) => state + 5);
-    store.dispatch({ type: "nnn" });
+    store.dispatch({ type: "Action5" });
 
-    expect(log.action).toBe("nnn");
+    expect(log.action).toBe("Action5");
     expect(log.stateAfterReducer).toBe(7);
     expect(store.getState()).toBe(7);
 

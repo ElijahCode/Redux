@@ -1,6 +1,9 @@
 export type State = any;
 
-export type Action = { [key: string]: string | number };
+export interface Action {
+  [key: string]: any;
+  type: string;
+}
 
 export type Reducer = (state: State | undefined, action: Action) => State;
 
@@ -8,7 +11,7 @@ export type Middleware = (
   store: Store // eslint-disable-line no-use-before-define
 ) => (next: (action: Action) => any) => (action: Action) => any;
 
-export type Store = {
+export interface Store {
   state: State;
   listeners: any[];
   middlewareList: Middleware[];
@@ -18,10 +21,12 @@ export type Store = {
   subscribe(fun: () => void): () => void;
   replaceReducer(nextReducer: Reducer): void;
   middleware(action: Action): void;
-};
+}
 
-export type CombineReducerArgument = {
+export interface CombineReducerArgument {
   [key: string]: any;
-};
+}
 
-export type CombineReducerResult = { [keys: string]: State };
+export interface CombineReducerResult {
+  [keys: string]: State;
+}

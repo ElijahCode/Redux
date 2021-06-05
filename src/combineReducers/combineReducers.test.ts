@@ -5,8 +5,8 @@ import { State, Action } from "../types";
 describe("combineReducers", () => {
   it("returns a reducer based on the config (initial state)", () => {
     const reducer = combineReducers({
-      a: (state = 2, action) => state,
-      b: (state = "hop", action) => state,
+      a: (state = 2, action: Action) => state,
+      b: (state = "hop", action: Action) => state,
     });
     expect(reducer(undefined, { type: "unknown" })).toEqual({
       a: 2,
@@ -25,8 +25,11 @@ describe("combineReducers", () => {
       a: 55,
       b: 66,
     };
-    const action1 = { payload: 1 };
-    const newState1 = reducer(state, { payload: 1 });
+    const action1 = {
+      type: "Action1",
+      payload: 1,
+    };
+    const newState1 = reducer(state, action1);
 
     expect(config.a).toHaveBeenCalledWith(55, action1);
     expect(config.b).toHaveBeenCalledWith(66, action1);
@@ -36,7 +39,10 @@ describe("combineReducers", () => {
       b: 65,
     });
 
-    const action2 = { payload: 2 };
+    const action2 = {
+      type: "Action2",
+      payload: 2,
+    };
     const newState2 = reducer(newState1, action2);
     expect(config.a).toHaveBeenCalledWith(56, action2);
     expect(config.b).toHaveBeenCalledWith(65, action2);
@@ -55,7 +61,7 @@ describe("Complex test with createStore", () => {
         result = "Fun1On";
         break;
       default:
-        result = [];
+        result = "Haven't active func";
     }
     return result;
   };
@@ -67,7 +73,7 @@ describe("Complex test with createStore", () => {
         result = "Fun2On";
         break;
       default:
-        result = [];
+        result = "Haven't active func";
     }
     return result;
   };
@@ -77,18 +83,18 @@ describe("Complex test with createStore", () => {
   it("Will return {a: Fun1, b: []}", () => {
     store.dispatch({ type: "Fun1 is active" });
     expect(store.getState().a).toBe("Fun1On");
-    expect(store.getState().b).toStrictEqual([]);
+    expect(store.getState().b).toBe("Haven't active func");
   });
 
   it("Will return {a: [], b: Fun2}", () => {
     store.dispatch({ type: "Fun2 is active" });
-    expect(store.getState().a).toStrictEqual([]);
+    expect(store.getState().a).toBe("Haven't active func");
     expect(store.getState().b).toBe("Fun2On");
   });
 
-  it("Will return {a: [], b: []}", () => {
-    store.dispatch({ type: "Fun1 is active" });
-    expect(store.getState().a).toBe("Fun1On");
-    expect(store.getState().b).toStrictEqual([]);
+  it("Will return: Haven't active func", () => {
+    store.dispatch({ type: "Fun3 is active" });
+    expect(store.getState().a).toBe("Haven't active func");
+    expect(store.getState().b).toStrictEqual("Haven't active func");
   });
 });

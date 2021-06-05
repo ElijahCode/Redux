@@ -7,7 +7,7 @@ import {
 
 export function combineReducers(
   reducers: CombineReducerArgument
-): (state?: State | undefined, action?: Action) => CombineReducerResult {
+): (state?: State | undefined, action?: Action) => State {
   return (state?: State | undefined, action?: Action): CombineReducerResult => {
     const result: CombineReducerResult = {};
     Object.keys(reducers).forEach((el) => {
