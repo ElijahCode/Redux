@@ -1,5 +1,5 @@
 {
-  "name": "@elijahcode/Redux",
+  "name": "@elijahcode/redux",
   "version": "1.0.0",
   "description": "",
   "main": "dist/createStore/createStore.js",

@@ -12,7 +12,7 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "src/**/*.test.ts"],
   "compilerOptions": {
-    "outDir" : "dist",
+    "outDir": "dist",
     "declaration": true
   }
 }
