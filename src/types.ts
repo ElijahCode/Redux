@@ -24,9 +24,13 @@ export interface Store {
 }
 
 export interface CombineReducerArgument {
-  [key: string]: any;
+  [key: string]: State;
 }
 
 export interface CombineReducerResult {
   [keys: string]: State;
+}
+
+export interface CreateStore {
+  (reducer: Reducer, preLoadedState?: State, middlewares?: Middleware[]): Store;
 }

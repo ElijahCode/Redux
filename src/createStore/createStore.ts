@@ -18,7 +18,7 @@ export function createStore(
       return this.state;
     },
     dispatch(action: Action): void {
-      if (this.middlewareList.length > 0) {
+      if (this.middlewareList && this.middlewareList.length > 0) {
         this.middleware(action);
       } else {
         this.state = this.storeReducer(this.state, action);
