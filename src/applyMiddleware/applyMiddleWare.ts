@@ -19,7 +19,7 @@ export function applyMiddleware(...middleware: Middleware[]): any {
     }
     const store = createStore(reducer, state);
 
-    const chain = middleware.map((el) => el(store.getState()));
+    const chain = middleware.map((el) => el(store));
     store.dispatch = compose(...chain)(store.dispatch.bind(store));
     return store;
   };

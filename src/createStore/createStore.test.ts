@@ -1,4 +1,5 @@
-import { Store, Action } from "../types";
+import { applyMiddleware } from "../applyMiddleware/applyMiddleWare";
+import { Store, Action, State } from "../types";
 import { createStore } from "./createStore";
 
 describe("functional interface", () => {
@@ -67,71 +68,47 @@ describe("functional interface", () => {
   it("middleware", () => {
     const log = {
       action: "",
-      stateAfterReducer: "",
+      state: "",
     };
 
     const log2 = {
       isRun: false,
-      stateBeforeReducer: "",
+      state: "",
       action: "",
     };
 
-    const logger = (store: Store) => (next: Store["storeReducer"]) => (
+    const logger = (store: Store) => (next: (action: Action) => any) => (
       action: Action
     ) => {
       log.action = action.type as string;
-      const result = next(store.getState(), action);
-      log.stateAfterReducer = result;
-      return result;
+      log.state = store.getState().counter;
+      return next(action);
     };
 
-    const logger2 = (store: Store) => (next: Store["storeReducer"]) => (
+    const logger2 = (store: Store) => (next: (action: Action) => any) => (
       action: Action
     ) => {
       log2.isRun = true;
       log2.action = action.type as string;
-      log2.stateBeforeReducer = store.getState();
-      return next(store.getState(), action);
+      log2.state = store.getState().counter;
+      return next(action);
     };
 
-    const store = createStore((state) => state + 1, 1, [logger]);
+    function reducer(state: State, action: Action): State {
+      return { counter: state.counter + 1 };
+    }
+    const state = { counter: 5 };
 
-    expect(log.action).toBe("");
-    expect(log.stateAfterReducer).toBe("");
-    expect(store.getState()).toBe(1);
+    const store = createStore(reducer, state, applyMiddleware(logger, logger2));
 
-    store.dispatch({ type: "Action4" });
+    store.dispatch({ type: "ACTION" });
 
-    expect(log.action).toBe("Action4");
-    expect(log.stateAfterReducer).toBe(2);
-    expect(store.getState()).toBe(2);
+    expect(log.action).toBe("ACTION");
+    expect(log.state).toBe(5);
 
-    store.replaceReducer((state) => state + 5);
-    store.dispatch({ type: "Action5" });
-
-    expect(log.action).toBe("Action5");
-    expect(log.stateAfterReducer).toBe(7);
-    expect(store.getState()).toBe(7);
-
-    log.action = "";
-    log.stateAfterReducer = "";
-
-    const store2 = createStore((state) => state + 3, 1, [logger, logger2]);
-
-    expect(log.action).toBe("");
-    expect(log.stateAfterReducer).toBe("");
-    expect(log2.isRun).toBeFalsy();
-    expect(log2.action).toBe("");
-    expect(log2.stateBeforeReducer).toBe("");
-    expect(store2.getState()).toBe(1);
-
-    store2.dispatch({ type: "tiptop" });
-
-    expect(log.action).toBe("tiptop");
-    expect(log.stateAfterReducer).toBe(4);
+    expect(log2.action).toBe("ACTION");
     expect(log2.isRun).toBeTruthy();
-    expect(log2.action).toBe("tiptop");
-    expect(log2.stateBeforeReducer).toBe(1);
-    expect(store2.getState()).toBe(4);
+    expect(log2.state).toBe(5);
+    expect(store.getState().counter).toBe(6);
   });
 });
