@@ -12,9 +12,9 @@ Currently, my option supports creating a store, getting its state, changing the 
 
 You can create new store using function createStore. This function have next signature:
 
-```js
+```ts
 createStore(
-    reducer, preloadedState?, [... middlewares]?
+    reducer, preloadedState?, applyMiddleware?
 ) => store;
 ```
 
@@ -22,14 +22,14 @@ Let's watch on argumets of this function:
 
 1. reducer is clean function that input state of system and action and return new state of system. It's have signature:
 
-```js
+```ts
 reducer(state, action) => newState
 ```
 
 state may have any type of data, action - object with string keys's type and any type of data as value;
 
 2.  preloadedState is optional argument, that config initital state of system. It's can have any type of data.
-3.  [... middlewares] is optional argument, that is an array of function, that perfom actions between getting action and calculated new state of systems. This functions must contain in themselfs next functionality:
+3.  applyMiddleware is optional parameter. For more information about using it watch applyMiddlewatr section.
 
 ```js
 middlewares = storage => next => action {
@@ -55,19 +55,7 @@ function reducer(state, action) {
 
 const preLoadedState = { appState: "Not defined" };
 
-const logger = (storage) => (next) => (action) => {
-  console.log("Current state: " + storage.getState());
-  console.log("Action: " + action);
-  const result = next(storage.getState(), action);
-  console.log(result);
-  return result;
-};
-
-const middlewares = [logger];
-
-const store = createStore(reducer, preLoadedState, middlewares);
-
-const storeWithoutMiddlewares = createStore(reducer, preLoadedState);
+const store = createStore(reducer, preLoadedState);
 
 const storeWithOnlyReducer = createStore(reducer);
 ```
@@ -160,3 +148,64 @@ store.dispatch({
 console.log(store.getState());
 // -> {applyState: 'On', taskState: 'In work'}
 ```
+
+# applyMiddleware
+
+## Description
+
+This function let you run functions(calling middleware's) when running dispatch methnod but before running reducer.
+
+Whith middleware's you create loggers, API points and other features.
+
+## Usage
+
+You can use appleMiddleware like this:
+
+```ts
+    const logger = (store: Store) => (next: (action: Action) => any) => (
+      action: Action
+    ) => {
+      log.action = action.type as string;
+      log.state = store.getState().counter;
+      return next(action);
+    };
+
+    const logger2 = (store: Store) => (next: (action: Action) => any) => (
+      action: Action
+    ) => {
+      log2.isRun = true;
+      log2.action = action.type as string;
+      log2.state = store.getState().counter;
+      return next(action);
+    };
+
+    function reducer(state: State, action: Action): State {
+      return { counter: state.counter + 1 };
+    }
+    const state = { counter: 5 };
+
+    const store = createStore(
+      reducer,
+      state,
+      applyMiddleware(logger, logger2)
+    );
+
+    store.dispatch({ type: "ACTION" });
+
+    console.log(log.action); // -> "ACTION"
+    console.log(log.state); // -> 5
+
+    console.log(log2.action); // -> "ACTION"
+    console.log(log2.isRun); // -> true
+    console.log(log2.state); // -> 5
+    console.log(store.getState(); // -> 6
+```
+
+# ChangeLog
+
+## 2.0.0
+
+1. Remove middleware method from store.
+2. Add supporting function compose.
+3. Add appleMiddleware function
+4. Add support appleMiddlware to createStore function;
