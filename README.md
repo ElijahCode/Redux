@@ -203,6 +203,10 @@ You can use appleMiddleware like this:
 
 # ChangeLog
 
+## 3.0.0
+
+1. Now store without preLoadedState can create state from reducer.
+
 ## 2.0.0
 
 1. Remove middleware method from store.
