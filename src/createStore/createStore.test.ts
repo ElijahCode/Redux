@@ -5,7 +5,7 @@ import { createStore } from "./createStore";
 describe("functional interface", () => {
   it("returns state based on initial state", () => {
     const state = { name: "Bob" };
-    expect(createStore(() => null).getState()).toBe(undefined);
+    expect(createStore(() => null).getState()).toBe(null);
     expect(createStore(() => null, state).getState()).toBe(state);
   });
 
@@ -14,12 +14,13 @@ describe("functional interface", () => {
     const action2 = { type: "Action2" };
     const reducer = jest.fn((state = 1) => state + 1);
     const store = createStore(reducer);
+    expect(reducer).toHaveBeenCalledWith(undefined, { type: "INIT" });
     store.dispatch(action1);
-    expect(reducer).toHaveBeenCalledWith(undefined, action1);
-    expect(store.getState()).toBe(2);
-    store.dispatch(action2);
-    expect(reducer).toHaveBeenCalledWith(2, action2);
+    expect(reducer).toHaveBeenCalledWith(2, action1);
     expect(store.getState()).toBe(3);
+    store.dispatch(action2);
+    expect(reducer).toHaveBeenCalledWith(3, action2);
+    expect(store.getState()).toBe(4);
   });
 
   it("notifies listeners about updates", () => {
@@ -55,14 +56,15 @@ describe("functional interface", () => {
     const action1 = { type: "Action3" };
     const reducer = jest.fn((state = 3) => state + 1);
     const store = createStore(reducer);
+    expect(reducer).toHaveBeenCalledWith(undefined, { type: "INIT" });
     store.dispatch(action1);
-    expect(reducer).toHaveBeenCalledWith(undefined, action1);
-    expect(store.getState()).toBe(4);
+    expect(reducer).toHaveBeenCalledWith(4, action1);
+    expect(store.getState()).toBe(5);
     const nextReducer = jest.fn((state) => state - 2);
     store.replaceReducer(nextReducer);
     store.dispatch(action1);
-    expect(reducer).toHaveBeenCalledWith(undefined, action1);
-    expect(store.getState()).toBe(2);
+    expect(nextReducer).toHaveBeenCalledWith(5, action1);
+    expect(store.getState()).toBe(3);
   });
 
   it("middleware", () => {

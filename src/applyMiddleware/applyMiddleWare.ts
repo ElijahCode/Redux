@@ -11,14 +11,12 @@ import {
 
 export function applyMiddleware(...middleware: Middleware[]): any {
   return (reducer: Reducer, preLoadedState?: State): Store => {
-    let state: State;
-    if (!preLoadedState) {
-      state = reducer(null, { type: "INIT" });
-    } else {
-      state = preLoadedState;
-    }
+    const state = preLoadedState;
     const store = createStore(reducer, state);
-
+    // if(middleware.length === 1){
+    //   store.dispatch = middleware[0](store)(store.dispatch.bind(store));
+    //   return store;
+    // }
     const chain = middleware.map((el) => el(store));
     store.dispatch = compose(...chain)(store.dispatch.bind(store));
     return store;

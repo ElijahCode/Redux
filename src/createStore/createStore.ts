@@ -8,6 +8,7 @@ import {
 } from "../types";
 
 export { combineReducers } from "../combineReducers/combineReducers";
+export { applyMiddleware } from "../applyMiddleware/applyMiddleWare";
 
 export function createStore(
   reducer: Reducer,
@@ -15,10 +16,9 @@ export function createStore(
   applyMiddleWare?: any
 ): Store {
   if (applyMiddleWare) {
-    return preLoadedState
-      ? applyMiddleWare(reducer, preLoadedState)
-      : applyMiddleWare(reducer);
+    return applyMiddleWare(reducer, preLoadedState);
   }
+
   const store: Store = {
     state: preLoadedState,
     listeners: [],
@@ -40,6 +40,10 @@ export function createStore(
       this.storeReducer = nextReducer;
     },
   };
+
+  if (!preLoadedState) {
+    store.dispatch({ type: "INIT" });
+  }
 
   return store;
 }
